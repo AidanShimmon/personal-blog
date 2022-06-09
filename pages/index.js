@@ -13,6 +13,16 @@ const query = `{
            subheading
            description
          }
+         ... on PageBlocksProjects {
+            heading,
+            subheading,
+            items{
+              image,
+              name,
+              description,
+              href
+            }
+         }
      }
  }
 }`;
@@ -38,6 +48,23 @@ export default function Home(props) {
                 <div>{block.description}</div>
               </React.Fragment>
             );
+          case "PageBlocksProjects":
+            return (
+              <React.Fragment className="Projects" key={i + block.__typename}>
+                <div>{block.heading}</div>
+                <div>{block.subheading}</div>
+                {block.items?.map((item) => {
+                  return (
+                    <React.Fragment key={item.name}>
+                      <div>{item.image}</div>
+                      <div>{item.name}</div>
+                      <div>{item.description}</div>
+                      <div>{item.href}</div>
+                    </React.Fragment>
+                  );
+                })}
+              </React.Fragment>
+            )
         }
       })
       : null}

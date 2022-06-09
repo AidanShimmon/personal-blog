@@ -172,7 +172,22 @@ export type PageBlocksHero = {
   description?: Maybe<Scalars['String']>;
 };
 
-export type PageBlocks = PageBlocksHero;
+export type PageBlocksProjectsItems = {
+  __typename?: 'PageBlocksProjectsItems';
+  image?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  href?: Maybe<Scalars['String']>;
+};
+
+export type PageBlocksProjects = {
+  __typename?: 'PageBlocksProjects';
+  heading?: Maybe<Scalars['String']>;
+  subheading?: Maybe<Scalars['String']>;
+  items?: Maybe<Array<Maybe<PageBlocksProjectsItems>>>;
+};
+
+export type PageBlocks = PageBlocksHero | PageBlocksProjects;
 
 export type Page = Node & Document & {
   __typename?: 'Page';
@@ -291,8 +306,22 @@ export type PageBlocksHeroMutation = {
   description?: InputMaybe<Scalars['String']>;
 };
 
+export type PageBlocksProjectsItemsMutation = {
+  image?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  href?: InputMaybe<Scalars['String']>;
+};
+
+export type PageBlocksProjectsMutation = {
+  heading?: InputMaybe<Scalars['String']>;
+  subheading?: InputMaybe<Scalars['String']>;
+  items?: InputMaybe<Array<InputMaybe<PageBlocksProjectsItemsMutation>>>;
+};
+
 export type PageBlocksMutation = {
   hero?: InputMaybe<PageBlocksHeroMutation>;
+  projects?: InputMaybe<PageBlocksProjectsMutation>;
 };
 
 export type PageMutation = {
@@ -304,7 +333,7 @@ export type PostMutation = {
   body?: InputMaybe<Scalars['String']>;
 };
 
-export type PagePartsFragment = { __typename?: 'Page', blocks?: Array<{ __typename: 'PageBlocksHero', heading?: string | null | undefined, subheading?: string | null | undefined, description?: string | null | undefined } | null | undefined> | null | undefined };
+export type PagePartsFragment = { __typename?: 'Page', blocks?: Array<{ __typename: 'PageBlocksHero', heading?: string | null | undefined, subheading?: string | null | undefined, description?: string | null | undefined } | { __typename: 'PageBlocksProjects', heading?: string | null | undefined, subheading?: string | null | undefined, items?: Array<{ __typename: 'PageBlocksProjectsItems', image?: string | null | undefined, name?: string | null | undefined, description?: string | null | undefined, href?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined> | null | undefined };
 
 export type PostPartsFragment = { __typename?: 'Post', title?: string | null | undefined, body?: string | null | undefined };
 
@@ -313,12 +342,12 @@ export type PageQueryVariables = Exact<{
 }>;
 
 
-export type PageQuery = { __typename?: 'Query', page: { __typename?: 'Page', id: string, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, blocks?: Array<{ __typename: 'PageBlocksHero', heading?: string | null | undefined, subheading?: string | null | undefined, description?: string | null | undefined } | null | undefined> | null | undefined } };
+export type PageQuery = { __typename?: 'Query', page: { __typename?: 'Page', id: string, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, blocks?: Array<{ __typename: 'PageBlocksHero', heading?: string | null | undefined, subheading?: string | null | undefined, description?: string | null | undefined } | { __typename: 'PageBlocksProjects', heading?: string | null | undefined, subheading?: string | null | undefined, items?: Array<{ __typename: 'PageBlocksProjectsItems', image?: string | null | undefined, name?: string | null | undefined, description?: string | null | undefined, href?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined> | null | undefined } };
 
 export type PageConnectionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PageConnectionQuery = { __typename?: 'Query', pageConnection: { __typename?: 'PageConnection', totalCount: number, edges?: Array<{ __typename?: 'PageConnectionEdges', node?: { __typename?: 'Page', id: string, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, blocks?: Array<{ __typename: 'PageBlocksHero', heading?: string | null | undefined, subheading?: string | null | undefined, description?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined } | null | undefined> | null | undefined } };
+export type PageConnectionQuery = { __typename?: 'Query', pageConnection: { __typename?: 'PageConnection', totalCount: number, edges?: Array<{ __typename?: 'PageConnectionEdges', node?: { __typename?: 'Page', id: string, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, blocks?: Array<{ __typename: 'PageBlocksHero', heading?: string | null | undefined, subheading?: string | null | undefined, description?: string | null | undefined } | { __typename: 'PageBlocksProjects', heading?: string | null | undefined, subheading?: string | null | undefined, items?: Array<{ __typename: 'PageBlocksProjectsItems', image?: string | null | undefined, name?: string | null | undefined, description?: string | null | undefined, href?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined> | null | undefined } | null | undefined } | null | undefined> | null | undefined } };
 
 export type PostQueryVariables = Exact<{
   relativePath: Scalars['String'];
@@ -340,6 +369,17 @@ export const PagePartsFragmentDoc = gql`
       heading
       subheading
       description
+    }
+    ... on PageBlocksProjects {
+      heading
+      subheading
+      items {
+        __typename
+        image
+        name
+        description
+        href
+      }
     }
   }
 }
