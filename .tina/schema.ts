@@ -1,4 +1,30 @@
 import { defineConfig, defineSchema } from "tinacms";
+import type {TinaTemplate} from "tinacms";
+
+const heroBlock:TinaTemplate = {
+  name: "hero",
+  label: "Hero Block",
+  fields: [
+    {
+      type: "string",
+      label: "Heading",
+      name: "heading",
+    },
+    {
+      type: "string",
+      label: "Sub Heading",
+      name: "subheading",
+    },
+    {
+      type: "string",
+      label: "Description",
+      name: "description",
+      ui: {
+        component: "textarea"
+      },
+    },
+  ],
+}
 
 const schema = defineSchema({
   collections: [
@@ -9,10 +35,11 @@ const schema = defineSchema({
       format: "mdx",
       fields: [
         {
-          name: "body",
-          label: "Main Content",
-          type: "rich-text",
-          isBody: true,
+          type: "object",
+          list: true,
+          name: "blocks",
+          label: "Sections",
+          templates: [heroBlock],
         },
       ],
     },

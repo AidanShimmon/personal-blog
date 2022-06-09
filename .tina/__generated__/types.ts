@@ -165,9 +165,18 @@ export type CollectionDocumentsArgs = {
 
 export type DocumentNode = Page | Post;
 
+export type PageBlocksHero = {
+  __typename?: 'PageBlocksHero';
+  heading?: Maybe<Scalars['String']>;
+  subheading?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+};
+
+export type PageBlocks = PageBlocksHero;
+
 export type Page = Node & Document & {
   __typename?: 'Page';
-  body?: Maybe<Scalars['JSON']>;
+  blocks?: Maybe<Array<Maybe<PageBlocks>>>;
   id: Scalars['ID'];
   _sys: SystemInfo;
   _values: Scalars['JSON'];
@@ -276,8 +285,18 @@ export type DocumentMutation = {
   post?: InputMaybe<PostMutation>;
 };
 
+export type PageBlocksHeroMutation = {
+  heading?: InputMaybe<Scalars['String']>;
+  subheading?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+};
+
+export type PageBlocksMutation = {
+  hero?: InputMaybe<PageBlocksHeroMutation>;
+};
+
 export type PageMutation = {
-  body?: InputMaybe<Scalars['JSON']>;
+  blocks?: InputMaybe<Array<InputMaybe<PageBlocksMutation>>>;
 };
 
 export type PostMutation = {
@@ -285,7 +304,7 @@ export type PostMutation = {
   body?: InputMaybe<Scalars['String']>;
 };
 
-export type PagePartsFragment = { __typename?: 'Page', body?: any | null | undefined };
+export type PagePartsFragment = { __typename?: 'Page', blocks?: Array<{ __typename: 'PageBlocksHero', heading?: string | null | undefined, subheading?: string | null | undefined, description?: string | null | undefined } | null | undefined> | null | undefined };
 
 export type PostPartsFragment = { __typename?: 'Post', title?: string | null | undefined, body?: string | null | undefined };
 
@@ -294,12 +313,12 @@ export type PageQueryVariables = Exact<{
 }>;
 
 
-export type PageQuery = { __typename?: 'Query', page: { __typename?: 'Page', id: string, body?: any | null | undefined, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } };
+export type PageQuery = { __typename?: 'Query', page: { __typename?: 'Page', id: string, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, blocks?: Array<{ __typename: 'PageBlocksHero', heading?: string | null | undefined, subheading?: string | null | undefined, description?: string | null | undefined } | null | undefined> | null | undefined } };
 
 export type PageConnectionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PageConnectionQuery = { __typename?: 'Query', pageConnection: { __typename?: 'PageConnection', totalCount: number, edges?: Array<{ __typename?: 'PageConnectionEdges', node?: { __typename?: 'Page', id: string, body?: any | null | undefined, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null | undefined } | null | undefined> | null | undefined } };
+export type PageConnectionQuery = { __typename?: 'Query', pageConnection: { __typename?: 'PageConnection', totalCount: number, edges?: Array<{ __typename?: 'PageConnectionEdges', node?: { __typename?: 'Page', id: string, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, blocks?: Array<{ __typename: 'PageBlocksHero', heading?: string | null | undefined, subheading?: string | null | undefined, description?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined } | null | undefined> | null | undefined } };
 
 export type PostQueryVariables = Exact<{
   relativePath: Scalars['String'];
@@ -315,7 +334,14 @@ export type PostConnectionQuery = { __typename?: 'Query', postConnection: { __ty
 
 export const PagePartsFragmentDoc = gql`
     fragment PageParts on Page {
-  body
+  blocks {
+    __typename
+    ... on PageBlocksHero {
+      heading
+      subheading
+      description
+    }
+  }
 }
     `;
 export const PostPartsFragmentDoc = gql`

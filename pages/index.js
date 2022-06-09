@@ -1,3 +1,4 @@
+import React from "react";
 import { staticRequest } from "tinacms";
 import { TinaMarkdown } from "tinacms/dist/rich-text";
 import { Layout } from "../components/Layout";
@@ -5,8 +6,15 @@ import { useTina } from "tinacms/dist/edit-state";
 
 const query = `{
   page(relativePath: "home.mdx"){
-    body
-  }
+     blocks{
+       __typename
+         ... on PageBlocksHero {
+           heading
+           subheading
+           description
+         }
+     }
+ }
 }`;
 
 export default function Home(props) {
@@ -17,10 +25,22 @@ export default function Home(props) {
     data: props.data,
   });
 
-  const content = data.page.body;
   return (
     <Layout>
-      <TinaMarkdown content={content} />
+      {data.page.blocks 
+        ? data.page.blocks.map(function (block, i) {
+        switch (block.__typename) {
+          case "PageBlocksHero":
+            return (
+              <React.Fragment className="Hero" key={i + block.__typename}>
+                <div>{block.heading}</div>
+                <div>{block.subheading}</div>
+                <div>{block.description}</div>
+              </React.Fragment>
+            );
+        }
+      })
+      : null}
     </Layout>
   );
 }
